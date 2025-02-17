@@ -1,1 +1,35 @@
+/* main.css */
 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+#chat-box {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+#controls {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#start-btn {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#start-btn img {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    margin-right: 10px;
+}

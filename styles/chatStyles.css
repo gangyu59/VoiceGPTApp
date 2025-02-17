@@ -1,0 +1,16 @@
+/* chatStyles.css */
+.user-message {
+    background-color: #e0f7fa;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0;
+    text-align: left;
+}
+
+.gpt-message {
+    background-color: #c8e6c9;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0;
+    text-align: left;
+}
