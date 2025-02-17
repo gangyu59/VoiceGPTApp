@@ -23,6 +23,7 @@ let stopButton = document.createElement('button');
 stopButton.id = 'stop-btn';
 stopButton.innerText = '⏹ 停止播放';
 stopButton.style.display = 'none';
+stopButton.style.fontSize = '130%';
 stopButton.style.padding = '8px 12px';
 stopButton.style.backgroundColor = 'red';
 stopButton.style.color = 'white';
@@ -51,11 +52,42 @@ stopButton.addEventListener('click', function () {
     stopSpeechPlayback();
 });
 
-// 处理用户语音输入
-function handleUserSpeech(transcript) {
-    chatBox.innerHTML += `<div class="user-message"><strong>你:</strong> ${transcript}</div>`;
+let micBlinkInterval = null; // 控制闪烁的定时器
 
-		// 滚动到底部
+// 放大麦克风 Icon 20%（初始化时执行一次）
+const micIcon = micButton.querySelector('i') || micButton; // 查找按钮内的 icon
+micIcon.style.fontSize = '130%'; // 放大
+
+// 开始麦克风图标闪烁
+function startMicBlinking() {
+    micBlinkInterval = setInterval(() => {
+        micIcon.style.opacity = (micIcon.style.opacity === '0.5') ? '1' : '0.5';
+    }, 500); // 每 500ms 切换透明度，实现闪烁效果
+}
+
+// 停止麦克风图标闪烁
+function stopMicBlinking() {
+    clearInterval(micBlinkInterval);
+    micIcon.style.opacity = '1'; // 还原为正常状态
+}
+
+// 监听麦克风按钮点击
+micButton.addEventListener('click', function () {
+    if (!micButton.disabled) {
+        // 预加载空白语音，防止 Safari 阻止播放
+        const tempSpeech = new SpeechSynthesisUtterance('');
+        window.speechSynthesis.speak(tempSpeech);
+
+        startMicBlinking(); // 开始闪烁
+        startSpeechRecognition(handleUserSpeech);
+    }
+});
+
+// 处理用户语音输入（停止闪烁）
+function handleUserSpeech(transcript) {
+    stopMicBlinking(); // 用户输入结束后停止闪烁
+
+    chatBox.innerHTML += `<div class="user-message"><strong>你:</strong> ${transcript}</div>`;
     scrollChatToBottom();
 
     // 记录用户输入到对话历史
