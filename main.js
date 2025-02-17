@@ -1,4 +1,42 @@
 // 获取页面元素
+const languageSelect = document.createElement('select');
+languageSelect.id = 'language-select';
+
+// **调整样式，使其放大 30% 并居中**
+languageSelect.style.fontSize = '130%';
+languageSelect.style.padding = '10px';
+languageSelect.style.marginTop = '10px';
+languageSelect.style.display = 'block';
+languageSelect.style.textAlign = 'center';
+languageSelect.style.width = '50%'; // 控制宽度
+languageSelect.style.marginLeft = 'auto';
+languageSelect.style.marginRight = 'auto';
+
+// 添加语言选项
+const languages = {
+    'zh-CN': '中文',
+    'en-US': 'English',
+    'es-ES': 'Español',
+		'ja-JP': '日本语',
+    'fr-FR': 'Français'
+};
+
+for (const [code, name] of Object.entries(languages)) {
+    let option = document.createElement('option');
+    option.value = code;
+    option.textContent = name;
+    languageSelect.appendChild(option);
+}
+
+// **监听语言切换**
+languageSelect.addEventListener('change', function () {
+    setRecognitionLanguage(languageSelect.value);
+});
+
+// **插入到页面（放在麦克风按钮下方）**
+const controls = document.getElementById('controls');
+controls.appendChild(languageSelect);
+
 const micButton = document.getElementById('start-btn');
 const chatBox = document.getElementById('chat-box');
 
@@ -165,10 +203,29 @@ async function fetchGPTResponse() {
 // 语音合成
 function textToSpeech(text) {
     if ('speechSynthesis' in window) {
+        stopSpeechRecognition(); // **在朗读前停止语音识别，防止冲突**
+
         const speech = new SpeechSynthesisUtterance(text);
-        speech.lang = 'zh-CN';
-        speech.rate = 1.1;
+        speech.lang = selectedLanguage || 'zh-CN'; // 根据用户选择的语言朗读
+        speech.rate = 1;
         speech.pitch = 1;
+
+        // **优化特定语言的语音**
+        const voices = speechSynthesis.getVoices();
+        
+        if (speech.lang === 'ja-JP') {
+            // **日语使用 Kyoko 语音**
+            speech.voice = voices.find(voice => voice.name.includes('Kyoko')) || speech.voice;
+        } else if (speech.lang === 'en-US') {
+            // **英语使用 Samantha 语音**
+            speech.voice = voices.find(voice => voice.name.includes('Samantha')) || speech.voice;
+        } else if (speech.lang === 'fr-FR') {
+            // **法语使用 Thomas 语音**
+            speech.voice = voices.find(voice => voice.name.includes('Thomas')) || speech.voice;
+        } else if (speech.lang === 'es-ES') {
+            // **西班牙语使用 Jorge 语音**
+            speech.voice = voices.find(voice => voice.name.includes('Jorge')) || speech.voice;
+        }
 
         // 显示进度条 & 停止按钮
         progressBar.style.display = 'block';
