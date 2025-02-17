@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>与GPT语音对话</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/chatStyles.css">
+</head>
+<body>
+    <div id="chat-box">
+        <!-- 显示聊天内容 -->
+    </div>
+
+    <div id="controls">
+        <button id="start-btn">
+            <img src="assets/mic-icon.png" alt="麦克风" id="mic-icon"> 点击开始语音
+        </button>
+    </div>
+
+    <script src="services/SpeechRecognition.js"></script>
+    <script src="services/GPTService.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
