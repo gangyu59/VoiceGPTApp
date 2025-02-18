@@ -181,10 +181,27 @@ async function fetchGPTResponse() {
         hideHourglass();
 
         // 显示 GPT 回复
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'gpt-message';
-        messageDiv.innerHTML = `<strong>GPT:</strong> ${gptReply}`;
-        chatBox.appendChild(messageDiv);
+const messageDiv = document.createElement('div');
+messageDiv.className = 'gpt-message';
+
+// **使用 <pre> 保留 GPT 原始格式**
+const messageContent = document.createElement('pre');
+messageContent.className = 'gpt-text';
+messageContent.textContent = `GPT: ${gptReply}`;
+
+// **创建复制按钮**
+const copyButton = document.createElement('button');
+copyButton.innerHTML = '📋 复制'; // 直接使用通用复制图标
+copyButton.classList.add('copy-btn');
+copyButton.onclick = function () {
+    copyToClipboard(gptReply);
+};
+
+// **将内容和按钮添加到 GPT 回复框**
+messageDiv.appendChild(messageContent);
+messageDiv.appendChild(copyButton);
+chatBox.appendChild(messageDiv);
+scrollChatToBottom();
 
         // 让进度条与最新的 GPT 回复对话框宽度一致
         progressBar.style.width = messageDiv.clientWidth + 'px';
@@ -277,32 +294,3 @@ function disableMic(disabled) {
     micButton.style.opacity = disabled ? '0.5' : '1';
 }
 
-// 显示沙漏 (放大 2 倍，并浮动在 chatbox 上方)
-function showHourglass() {
-    let existingHourglass = document.getElementById('hourglass');
-    if (!existingHourglass) {
-        const hourglass = document.createElement('div');
-        hourglass.id = 'hourglass';
-        hourglass.innerHTML = '⌛ 正在思考...';
-        hourglass.style.position = 'absolute'; // 使其浮动
-        hourglass.style.top = chatBox.offsetTop + 150 + 'px'; // 放在 chatbox 上方
-        hourglass.style.left = '50%';
-        hourglass.style.transform = 'translateX(-50%)';
-        hourglass.style.padding = '10px 20px';
-        hourglass.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-        hourglass.style.color = 'white';
-        hourglass.style.borderRadius = '8px';
-        hourglass.style.fontSize = '24px'; // 放大字体
-        hourglass.style.fontWeight = 'bold';
-        hourglass.style.zIndex = '1000'; // 确保在最上层
-        document.body.appendChild(hourglass); // 添加到 body 以浮动显示
-    }
-}
-
-// 隐藏沙漏
-function hideHourglass() {
-    const hourglass = document.getElementById('hourglass');
-    if (hourglass) {
-        hourglass.remove();
-    }
-}
